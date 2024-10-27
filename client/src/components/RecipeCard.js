@@ -7,7 +7,8 @@ const RecipeCard = ({ onSubmit }) => {
     cuisine: "",
     cookingTime: "",
     complexity: "",
-    people: ""
+    people: "",
+    note: "", // New note field
   });
 
   const handleChange = (e) => {
@@ -15,8 +16,15 @@ const RecipeCard = ({ onSubmit }) => {
   };
 
   const handleSubmit = () => {
-    if (Object.values(formData).some((value) => !value)) {
-      alert("Please fill in all fields");
+    if (
+      !formData.ingredients ||
+      !formData.mealType ||
+      !formData.cuisine ||
+      !formData.cookingTime ||
+      !formData.complexity ||
+      !formData.people
+    ) {
+      alert("Please fill in all required fields");
       return;
     }
     onSubmit(formData);
@@ -60,6 +68,17 @@ const RecipeCard = ({ onSubmit }) => {
             )}
           </div>
         ))}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1" htmlFor="note">Note (Optional)</label>
+          <input
+            id="note"
+            type="text"
+            placeholder="Any specific requirements (e.g., lactose-free)"
+            value={formData.note}
+            onChange={handleChange}
+            className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
       </div>
       <button
         onClick={handleSubmit}

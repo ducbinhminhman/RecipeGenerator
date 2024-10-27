@@ -1,6 +1,9 @@
+// server.js
+
 const express = require("express");
 const cors = require("cors");
 const OpenAI = require("openai");
+require("dotenv").config({ path: "../.env" }); // Adjusted to load from parent directory
 
 const app = express();
 const PORT = 3001;
@@ -8,56 +11,65 @@ const PORT = 3001;
 // Enable CORS for all routes
 app.use(cors());
 
-// Example JSON schema for recipe
-const exampleJson = {
-  "name": "Phở Gà Áp Chảo Sáng",
-  "ingredients": [
-    { "ingredient": "Chicken breast", "quantity": "150g" },
-    { "ingredient": "Pho noodles", "quantity": "1 cup" },
-    { "ingredient": "Chicken stock", "quantity": "2 cups" }
-  ],
-  "how_to_do": ["Step 1: Cook the noodles.", "Step 2: Prepare the stock."],
-  "macronutrients_summary": {
-    "carbohydrates": "40g",
-    "proteins": "27g",
-    "fats": "10g",
-    "calories": "350 kcal"
-  }
-};
-
 // SSE Endpoint
 app.get("/recipeStream", (req, res) => {
-  const { ingredients, mealType, cuisine, cookingTime, complexity, people } = req.query;
+  const { ingredients, cuisine, cookingTime, complexity, people, note } = req.query;
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
 
+  // Function to send messages
   const sendEvent = (chunk) => {
-    let chunkResponse;
     if (chunk.choices[0].finish_reason === "stop") {
       res.write(`data: ${JSON.stringify({ action: "close" })}\n\n`);
     } else {
-      chunkResponse = chunk.choices[0].delta.content
-        ? { action: "chunk", chunk: chunk.choices[0].delta.content }
-        : { action: "start" };
-      res.write(`data: ${JSON.stringify(chunkResponse)}\n\n`);
+      res.write(`data: ${JSON.stringify({ action: "chunk", chunk: chunk.choices[0].delta.content })}\n\n`);
     }
   };
 
+  // Include the note if provided by the user
+  const customNote = note ? `Please ensure the recipe meets the following requirement: ${note}.` : "";
+
+  // Update the prompt to let the AI consider the note if it exists
   const prompt = `
-    Generate a recipe based on:
-    - Ingredients: ${ingredients}
-    - Meal Type: ${mealType}
-    - Cuisine: ${cuisine}
+    Generate a recipe in a structured plain text format with a suitable name for the dish based on the given ingredients, cuisine, and other details. The dish name should be in the native language of the cuisine (use correct characters, not transliteration), followed by its English translation in parentheses. The output should be formatted in a visually appealing way, with specific sections in bold as described below.
+
+    ${customNote}
+
+    ---
+    **How to Make [Native Dish Name in Original Script] ([English Translation]) - ${cuisine} Style**
+
+    This recipe is for ${people} servings and takes around ${cookingTime}. Complexity: ${complexity}.
+
+    **Recipe at a Glance:**
     - Cooking Time: ${cookingTime}
     - Complexity: ${complexity}
-    - Number of People: ${people}
-    The recipe should follow this schema: ${JSON.stringify(exampleJson)}
+    - Serves: ${people}
+    - Main Ingredients: ${ingredients}
+
+    **Ingredients You’ll Need:**
+    - List each ingredient in a clear format, specifying quantities where possible.
+
+    **Step-by-Step Instructions:**
+    1. Provide each cooking step in a numbered format.
+    2. Include specific steps for cooking the primary ingredient (${ingredients.split(",")[0]}).
+
+    **Nutritional Summary (per serving):**
+    - Calories: [calories in kcal]
+    - Carbohydrates: [amount in grams]
+    - Proteins: [amount in grams]
+    - Fats: [amount in grams]
+
+    **Tips for a Perfect Dish:**
+    - Include helpful cooking tips, such as optimal flavor combinations or cooking techniques.
+
+    ---
+    The response should use bold headings as specified and be in plain text format. Avoid any markdown syntax or code blocks.
   `;
 
   const messages = [
-    { role: "system", content: "Provide output in JSON format following the schema provided." },
+    { role: "system", content: "You are a recipe assistant that provides structured recipes in plain text format with bold headings, including a nutritional summary per serving." },
     { role: "user", content: prompt },
   ];
 
@@ -65,8 +77,6 @@ app.get("/recipeStream", (req, res) => {
 
   req.on("close", () => res.end());
 });
-
-require('dotenv').config({ path: '../RecipeGenerator/.env' });
 
 async function fetchOpenAICompletionsStream(messages, callback) {
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
@@ -84,7 +94,7 @@ async function fetchOpenAICompletionsStream(messages, callback) {
       callback(chunk);
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error fetching data from OpenAI API:", error);
   }
 }
 

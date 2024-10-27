@@ -6,7 +6,6 @@ import "./App.css";
 function App() {
   const [recipeData, setRecipeData] = useState(null);
   const [recipeText, setRecipeText] = useState('');
-  const [formattedRecipe, setFormattedRecipe] = useState(null);
   const [error, setError] = useState(null);
   const eventSourceRef = useRef(null);
 
@@ -28,7 +27,6 @@ function App() {
       const data = JSON.parse(event.data);
       if (data.action === 'close') {
         closeEventStream();
-        formatRecipe(recipeText);
       } else if (data.chunk) {
         setRecipeText((prev) => prev + data.chunk);
       }
@@ -37,6 +35,7 @@ function App() {
     eventSourceRef.current.onerror = (error) => {
       console.error('Error:', error);
       setError('Connection issue.');
+      closeEventStream();
     };
   };
 
@@ -44,15 +43,10 @@ function App() {
     if (eventSourceRef.current) eventSourceRef.current.close();
   };
 
-  const formatRecipe = (text) => {
-    const jsonMatch = text.match(/```json([\s\S]*?)```/);
-    if (jsonMatch && jsonMatch[1]) setFormattedRecipe(JSON.parse(jsonMatch[1].trim()));
-  };
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
       <RecipeCard onSubmit={setRecipeData} />
-      <RecipeDisplay error={error} recipeText={recipeText} formattedRecipe={formattedRecipe} />
+      <RecipeDisplay error={error} recipeText={recipeText} />
     </div>
   );
 }
