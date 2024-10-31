@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import RecipeCard from "./components/RecipeCard";
 import RecipeDisplay from "./components/RecipeDisplay";
+import Header from "./components/Header";
+import Hero from "./components/Hero";
 import "./App.css";
 
 function App() {
@@ -8,13 +9,15 @@ function App() {
   const [recipeText, setRecipeText] = useState('');
   const [error, setError] = useState(null);
   const eventSourceRef = useRef(null);
+  const recipeDisplayRef = useRef(null); // Reference to RecipeDisplay
 
   useEffect(() => () => closeEventStream(), []);
 
   useEffect(() => {
-    if (recipeData) {
+    if (recipeData) { 
       closeEventStream();
       initializeEventStream();
+      recipeDisplayRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll into view on recipe data change
     }
   }, [recipeData]);
 
@@ -43,10 +46,19 @@ function App() {
     if (eventSourceRef.current) eventSourceRef.current.close();
   };
 
+  const handleRecipeSubmit = (data) => {
+    setRecipeData(data);
+    setRecipeText(''); // Clear previous recipe text
+    setError(null); // Clear previous error
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
-      <RecipeCard onSubmit={setRecipeData} />
-      <RecipeDisplay error={error} recipeText={recipeText} />
+    <div className="bg-gray-100">
+      <Header />
+      <Hero onRecipeSubmit={handleRecipeSubmit} />
+      <div ref={recipeDisplayRef}> {/* Add reference here */}
+        <RecipeDisplay error={error} recipeText={recipeText} />
+      </div>
     </div>
   );
 }

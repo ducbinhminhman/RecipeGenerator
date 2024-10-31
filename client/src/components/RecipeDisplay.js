@@ -24,7 +24,7 @@ const RecipeDisplay = ({ error, recipeText }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-6 bg-white p-6 rounded-lg shadow-lg text-sm text-gray-700">
+    <div className="mx-auto w-full max-w-7xl px-8 py-6 md:px-16 md:py-10 lg:py-10 bg-white rounded-lg shadow-lg text-sm text-gray-700">
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {recipeText ? (
         <div>
