@@ -98,7 +98,7 @@ const Hero = ({ onRecipeSubmit }) => {
   return (
     <section>
       {/* Container */}
-      <div className="mx-auto w-full max-w-7xl py-6 md:py-10 lg:py-10">
+      <div className="mx-auto w-full max-w-7xl px-5 py-6 md:px-0 md:py-10 lg:py-10">
         {/* Component */}
         <div className="grid gap-12 sm:gap-20 lg:grid-cols-2">
           {/* Content */}
