@@ -6,7 +6,7 @@ const OpenAI = require("openai");
 require("dotenv").config({ path: "../.env" }); // Adjusted to load from parent directory
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Enable CORS for all routes
 app.use(cors());
