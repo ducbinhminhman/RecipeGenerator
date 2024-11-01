@@ -102,23 +102,25 @@ const Hero = ({ onRecipeSubmit }) => {
         {/* Component */}
         <div className="grid gap-12 sm:gap-20 lg:grid-cols-2">
           {/* Content */}
-          <div className="flex flex-col items-start gap-2">
-            <div className="flex items-center rounded-md bg-gray-300 px-3 py-1">
-              <div className="mr-1 h-2 w-2 rounded-full bg-black"></div>
-              <p className="text-sm">Try Creative</p>
-            </div>
-            <p className="text-sm text-gray-500 sm:text-xl">
-              A New Cooking Experience
-            </p>
-            {/* Title */}
-            <h1 className="mb-6 text-4xl font-bold md:text-6xl lg:mb-8">
-              with AI
-            </h1>
-            <p className="text-sm text-gray-500 sm:text-xl">
-              Tired of cooking the same thing every day? Let AI inspire you with new, 
-              exciting recipes using what you already have. Discover easy, delicious meals from around the world 
-              and bring variety back to your table – all while learning about the nutrition in every dish.
-            </p>
+          <div className="flex flex-col items-start gap-2 px-4 sm:px-6 md:px-8 lg:px-0 max-w-full sm:max-w-lg">
+          <div className="flex items-center rounded-md bg-gray-300 px-3 py-1">
+            <div className="mr-1 h-2 w-2 rounded-full bg-black"></div>
+            <p className="text-sm">Try Creative</p>
+          </div>
+          <p className="text-sm text-gray-500 sm:text-xl">
+            A New Cooking Experience
+          </p>
+          {/* Title */}
+          <h1 className="mb-6 text-4xl font-bold md:text-6xl lg:mb-8">
+            with AI
+          </h1>
+          <p className="text-sm text-gray-500 sm:text-xl">
+            Tired of cooking the same thing every day? Let AI inspire you with new, 
+            exciting recipes using what you already have. Discover easy, delicious meals from around the world 
+            and bring variety back to your table – all while learning about the nutrition in every dish.
+          </p>
+        </div>
+
             {/* Divider */}
             <div className="mb-8 mt-8 h-px w-full bg-black"></div>
             {/* Image with motion effects */}
