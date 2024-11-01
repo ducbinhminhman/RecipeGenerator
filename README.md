@@ -1,6 +1,6 @@
 # Recipe Generator App
 
-![Recipe Generator](./src/assets/cover.png) <!-- Add a screenshot of your app here for visual appeal -->
+![Cover Image](./client/src/assets/cover.png) <!-- Add a screenshot of your app here for visual appeal -->
 
 > **An AI-powered Recipe Generator that lets users discover new recipes using ingredients they already have. Enhance your cooking experience with a touch of AI!**
 
