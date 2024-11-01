@@ -23,7 +23,7 @@ function App() {
 
   const initializeEventStream = () => {
     const queryParams = new URLSearchParams(recipeData).toString();
-    const url = `http://localhost:3001/recipeStream?${queryParams}`;
+    const url = `https://recipegenerator-n26b.onrender.com/recipeStream?${queryParams}`;
     eventSourceRef.current = new EventSource(url);
 
     eventSourceRef.current.onmessage = (event) => {
