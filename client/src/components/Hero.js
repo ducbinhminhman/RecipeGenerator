@@ -125,12 +125,13 @@ const Hero = ({ onRecipeSubmit }) => {
             <motion.img
               src={image_hero}
               alt="Description of the image"
-              className="h-full object-cover rounded-md shadow-lg"
+              className="w-full max-w-md object-contain rounded-md shadow-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl" // Responsive sizing
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1 }}
               whileHover={{ scale: 1.05, rotate: 2 }} // Adds hover effect
             />
+
           </div>
           {/* Recipe Card Component */}
           <RecipeCard onSubmit={onRecipeSubmit} />
