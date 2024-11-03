@@ -41,7 +41,7 @@ const RecipeDisplay = ({ error, recipeText }) => {
           </button>
         </div>
       ) : (
-        <p>No recipe available. Please submit your request above.</p>
+        <p>No recipe available at the moment. Please submit your request above. Your result may take up to 30 seconds to appear. Enjoy your cooking time!</p>
       )}
     </div>
   );
